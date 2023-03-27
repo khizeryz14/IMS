@@ -9,7 +9,7 @@ def listitem():
     for z in myFile:
         a,b,c = z.strip("\n").split("\t")
         print(a + "\t\t" + b + "\t\t"+ c)
-    char = msvcrt.getch()
+    msvcrt.getch()
 
     myFile.close()
 
@@ -32,6 +32,7 @@ def delitem():
     delFile = open("data.txt","r+")
     temp = open("temp.txt","w")
     extracted = delFile.readlines()
+    listitem()
     toDelete = input("Enter serialID to be deleted: ")
     for line in extracted:
         field = line.split("\t")
@@ -40,7 +41,7 @@ def delitem():
             print("Record found!")
             print(line)
             print("Press any key to delete")
-            char = msvcrt.getch()
+            msvcrt.getch()
         else:
             temp.write(line)
 
@@ -89,7 +90,46 @@ def modifyitem():
     os.rename("temp.txt","data.txt")
 
 
+def sort():
+    oldFile = open('data.txt','r')
+    newFile = open('temp.txt','w')
+
+    isSwap = True
+    myArray = []
+
+    fileLen = len(oldFile.readlines())
+    oldFile.seek(0)
+
     
+    for i in range(fileLen):
+        line = oldFile.readline().split("\t")
+        myArray.append(line)
+
+    while isSwap == True:
+        isSwap = False
+        for c in range(fileLen-1):
+            if (int(myArray[c][0]) > int(myArray[c+1][0])):
+                temp = myArray[c] 
+                myArray[c] = myArray[c+1]
+                myArray[c+1] = temp
+                isSwap = True
+            
+
+    for x in myArray:
+        newFile.write(x[0] + "\t" + x[1] + "\t" + x[2])
+
+    oldFile.close()
+    newFile.close()
+
+    os.remove('data.txt')
+    os.rename('temp.txt','data.txt')
+
+    os.system("CLS")
+
+    print("File sorted successfully!")
+
+    msvcrt.getch()
+
 
 
 def menu():
@@ -103,7 +143,8 @@ def menu():
         print("3. List Items")
         print("4. Append Item")
         print("5. Modify Item")
-        print("9. Exit")
+        print("6. Sort File")
+        print("\n9. Exit")
         key = msvcrt.getch().decode('ASCII')
         if key == '1':
             additem()
@@ -115,6 +156,8 @@ def menu():
             appenditem()
         elif key == '5':
             modifyitem()
+        elif key == '6':
+            sort()
         elif key == '9':
             break
         else:
